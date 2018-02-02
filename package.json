@@ -9,6 +9,8 @@
   "author": "n826",
   "license": "ISC",
   "dependencies": {
-    "json2csv": "^3.11.5"
+    "config": "^1.29.2",
+    "json2csv": "^3.11.5",
+    "request": "^2.83.0"
   }
 }
