@@ -6,7 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "n826",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DenysNahurnyi/find-places-around.git"
+  },
+  "author": "Denys Nahurnyi",
+  "keywords": ["AWS", "Lambda", "Node.js", "Foursquare API", "Serverless", "Location"],
   "license": "ISC",
   "dependencies": {
     "config": "^1.29.2",
