@@ -12,72 +12,42 @@ module.exports.hello = (event, context, callback) => {
 };
 
 
-module.exports.test = (event, context, callback) => {
-  const fs = require('fs')
-
-  const columnNames = ["Name", "City", "Street address", "Latitude", "Longitude"]
-  
+module.exports.test = (event, context, callback) => {  
   let receivedData = null, errorInChain = null;
   getFoursquareData()
     .then(data => {
-      const json2csv = require('json2csv')
-
       console.log('Data fetched successfully')
-      fs.writeFileSync('/tmp/places.csv', json2csv({data: data, fields: columnNames }))
+      receivedData = data
     })
     .catch(err => {
       console.log('Data fetch failed\n', err)
       receivedData = err
     })
     .then(() => {
-      let response = null
-      if(!errorInChain) {
-        let data = fs.readFileSync('/tmp/places.csv');
-        response = {
-          statusCode: 200,
-          headers: {'Content-type' : 'text/csv'}, // text/csv
-          body: data.toString('utf8')
-        };
-      } else {
-          response = {
-          statusCode: 200,
-          headers: {'Content-type' : 'text/plain'}, // text/csv
-          body: errorInChain.toString('utf8')
-        };
-      }
-      // const response = {
-      //   statusCode: 200,
-      //   body: JSON.stringify(receivedData)
-      // };
+      let response = {
+        statusCode: 200,
+        headers: {'Content-type' : 'text/plain'},
+        body: receivedData.toString('utf8')
+      };
       callback(null, response)
     })
-
-    
-
-  
-
-  
-
-  
 };
 
 function getFoursquareData(params = {}) {
   const request = require('request');
   const config = require('config');
   return new Promise((res, rej) => {
-    let qs = {
-      client_id: config.app.Foursquare.Id,
-      client_secret: config.app.Foursquare.Secret,
-      ll: params.latitude && params.longitude ? (params.latitude + ',' + params.longitude) : '40.73,-73.93', // '40.73,-73.93'
-      radius: params.radius || 10 * 1000, // 10 * 1000
-      query: params.venueType || 'museum', // museum
-      v: getCurrentDateInSpecialFormat()
-    }
-    console.log(qs)
     request({
       url: 'https://api.foursquare.com/v2/venues/explore',
       method: 'GET',
-      qs 
+      qs: {
+        client_id: config.app.Foursquare.Id,
+        client_secret: config.app.Foursquare.Secret,
+        ll: params.latitude && params.longitude ? (params.latitude + ',' + params.longitude) : '40.73,-73.93', // '40.73,-73.93'
+        radius: params.radius || 10 * 1000, // 10 * 1000
+        query: params.venueType || 'museum', // museum
+        v: getCurrentDateInSpecialFormat()
+      }
     }, function(err, r, body) {
       if (err) {
         console.error(err);
@@ -107,3 +77,40 @@ function getCurrentDateInSpecialFormat() {
   )
   return date.getFullYear() + monthNDay[1] + monthNDay[0]
 }
+
+module.exports.getVenues = (event, context, callback) => {
+  const fs = require('fs')
+
+  const columnNames = ["Name", "City", "Street address", "Latitude", "Longitude"]
+  
+  let receivedData = null, errorInChain = null;
+  getFoursquareData()
+    .then(data => {
+      const json2csv = require('json2csv')
+
+      console.log('Data fetched successfully')
+      fs.writeFileSync('/tmp/places.csv', json2csv({data: data, fields: columnNames }))
+    })
+    .catch(err => {
+      console.log('Data fetch failed\n', err)
+      receivedData = err
+    })
+    .then(() => {
+      let response = null
+      if(!errorInChain) {
+        let data = fs.readFileSync('/tmp/places.csv');
+        response = {
+          statusCode: 200,
+          headers: {'Content-type' : 'text/csv'},
+          body: data.toString('binary')
+        };
+      } else {
+          response = {
+          statusCode: 200,
+          headers: {'Content-type' : 'text/plain'},
+          body: errorInChain.toString('utf8')
+        };
+      }
+      callback(null, response)
+    })
+};

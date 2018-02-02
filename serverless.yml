@@ -60,8 +60,14 @@ functions:
     handler: handler.test
     events:
      - http:
-         path: /
-         method: post
+         path: /venues.json
+         method: get
+  getVenues:
+    handler: handler.getVenues
+    events:
+     - http:
+         path: /venues.csv
+         method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
