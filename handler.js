@@ -17,12 +17,26 @@ module.exports.test = (event, context, callback) => {
 
   // fs.writeFileSync('/tmp/message.txt', 'Hello Node.js');
   // let data = fs.readFileSync('/tmp/message.txt');
-
+  
   let receivedData = null;
   getFoursquareData()
-    .then(data => receivedData = data)
-    .catch(err => receivedData = err)
-    .then(() => callback(null, JSON.stringify(receivedData)))
+    .then(data => {
+      console.log('Data fetched successfully')
+      receivedData = data
+    })
+    .catch(err => {
+      console.log('Data fetch failed')
+      receivedData = err
+    })
+    .then(() => {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify(receivedData)
+      };
+      callback(null, response)
+    })
+
+    
 
   
 
@@ -55,9 +69,7 @@ function getFoursquareData() {
         console.error(err);
         rej(err)
       } else {
-        let tmp = getBodyParameters(body)
-        console.log("------------------------------------------------------------------------------------------------------------------------------------------------------");
-        res(tmp);
+        res(getBodyParameters(body));
       }
     });
   })
@@ -65,7 +77,6 @@ function getFoursquareData() {
 
 function getBodyParameters(str) {
   const fRes = JSON.parse(str)
-  console.log(fRes.response.groups[0].items[0].venue)
   return fRes.response.groups[0].items.map(item => ({
     name: item.venue.name,
     city: item.venue.location.city,
