@@ -50,24 +50,18 @@ package:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  getVenuesJSON:
+    handler: handler.getVenuesJSON
     events:
      - http:
-         path: users/create
-         method: get
-  test:
-    handler: handler.test
+         path: venues.json
+         method: post
+  getVenuesCSV:
+    handler: handler.getVenuesCSV
     events:
      - http:
-         path: /venues.json
-         method: get
-  getVenues:
-    handler: handler.getVenues
-    events:
-     - http:
-         path: /venues.csv
-         method: get
+         path: venues.csv
+         method: post
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
