@@ -39,17 +39,43 @@ function getCurrentDateInSpecialFormat() {
 	return date.getFullYear() + monthNDay[1] + monthNDay[0]
 }
 
-const validateCoordinate = coordinate =>
-	new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}/).exec(coordinate)
+const processCoordinate = (coordinate, type) => {
+	if (new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}/).exec(coordinate))
+		return coordinate
+	else
+		throw new Error(type)
+}
 	
-const validateName = name =>
-	new RegExp(/^[a-z]{1,20}$/).exec(name)
-
-const validateRadius = r => {
-	if(new RegExp(/^\d{1,2}$|^1{1}0{2}$|^0{1}$/).exec(r)) {
-		return r < 1 ? 1000 : r * 1000
-	} else	
-			return false
+const processName = (name, type) => {
+	if(new RegExp(/^[a-z]{1,20}$/).exec(name))
+		return name
+	else
+		throw new Error(type)
 }
 
-	
+const processRadius = r => {
+	if(new RegExp(/^\d{1,2}$|^1{1}0{2}$|^0{1}$/).exec(r))
+		return r < 1 ? 1000 : r * 1000
+	else 
+		throw new Error('radius')
+}
+
+exports.processInputParams = function(params) {
+	try {
+		return {
+			venueType: processName(params.venueType, 'Venue type'),
+			radius: processRadius(params.radius),
+			latitude: processCoordinate(params.latitude, 'latitude'),
+			longitude: processCoordinate(params.longitude, 'longitude')
+		}
+	} catch (err) {
+		console.log(err)
+		const expectedInput = {
+			venueType: "String in legth from 1 to 20 latin letters",
+			radius: "Number from 0 to 1000",
+			latitude: "Float number from -89.999999 to 89.999999",
+			longitude: "Float number from -89.999999 to 89.999999"
+		}
+		throw new Error('Incorrect input parameter: '+ err.message +'\nExpected:\n' + JSON.stringify(expectedInput))
+	}
+}
