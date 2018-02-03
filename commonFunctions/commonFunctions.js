@@ -9,9 +9,9 @@ exports.getFoursquareData = function (params = {}) {
 		qs: {
 				client_id: config.app.Foursquare.Id,
 				client_secret: config.app.Foursquare.Secret,
-				ll: params.latitude && params.longitude ? (params.latitude + ',' + params.longitude) : '40.73,-73.93', // '40.73,-73.93'
-				radius: params.radius || 10 * 1000, // 10 * 1000
-				query: params.venueType || 'museum', // museum
+				ll: params.latitude + ',' + params.longitude,
+				radius: params.radius,
+				query: params.venueType,
 				v: getCurrentDateInSpecialFormat()
 		}
 		}, (err, r, body) => {
