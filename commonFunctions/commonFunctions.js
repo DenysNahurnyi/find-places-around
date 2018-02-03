@@ -40,14 +40,18 @@ function getCurrentDateInSpecialFormat() {
 }
 
 const processCoordinate = (coordinate, type) => {
-	if (new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}/).exec(coordinate))
+	if(Number(coordinate)) {
+		coordinate = Number(coordinate).toFixed(6)
+	}
+	console.log("coordinate:", coordinate)
+	if (new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}$/).exec(coordinate))
 		return coordinate
 	else
 		throw new Error(type)
 }
 	
 const processName = (name, type) => {
-	if(new RegExp(/^[a-z]{1,20}$/).exec(name))
+	if(name && new RegExp(/^[a-z]{1,20}$/).exec(name))
 		return name
 	else
 		throw new Error(type)
