@@ -18,10 +18,12 @@ exports.processCoordinate = function (coordinate, type) {
 }
 	
 exports.processName = function (name, type) {
-	if(name && new RegExp(/^[a-z]{1,20}$/).exec(name))
+	if(name && new RegExp(/^[a-z]{1,20}$/).exec(name)) {
 		return name
-	else
-		throw new Error(type)
+	}
+	else {
+		throw new Error(type)		
+	}
 }
 
 exports.processRadius = function (r) {
