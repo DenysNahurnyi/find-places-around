@@ -7,3 +7,6 @@ jspm_packages
 
 # Configurations with secret credentials
 config
+
+# Except transpiled
+handler.js
