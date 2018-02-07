@@ -1,8 +1,23 @@
 'use strict';
-const fs = require('fs')
-const json2csv = require('json2csv')
 const common = require('./commonFunctions/commonFunctions')
-console.log("1")
+
+module.exports.getVenuesCSVNext = async (event, context, callback) => {
+	try {
+		const userInput = common.processInputParams(JSON.parse(event.body))
+		const venuesData = await common.getFoursquareData(userInput);
+		const response = common.getMainResponse(event.headers["Accept"], venuesData)
+		
+		callback(null, response)
+	} catch(err) {
+		console.log(err)
+		const response = {
+			statusCode: err.code || 500,
+			headers: {'Content-Type' : 'text/plain'},
+			body: String(err)
+		};
+		callback(null, response)
+	}
+};
 
 // module.exports.getVenuesJSON = (event, context, callback) => {
 // 	console.log("2")
@@ -85,55 +100,30 @@ console.log("1")
 	
 // };
 
-module.exports.getVenuesCSVNext = async (event, context, callback) => {
-	const columnNames = ["Name", "City", "Street address", "Latitude", "Longitude"]
-	let response = {
-			statusCode: 200,
-			headers: null,
-			body: null
-		}
-	try {
-		const userInput = common.processInputParams(JSON.parse(event.body))
-		const venuesData = await common.getFoursquareData(userInput);
-		const fileBuffer = json2csv({data: venuesData, fields: columnNames })
+
+
+// module.exports.getVenuesJSONNext = async (event, context, callback) => {
+// 	let response = {
+// 		statusCode: 200,
+// 		headers: null,
+// 		body: null
+// 	}
+// 	try {
+// 		const userInput = common.processInputParams(JSON.parse(event.body))
+
+// 		const venuesData = await common.getFoursquareData(userInput);
 
 		
-		response.headers = {'Content-Type' : 'text/csv; charset=utf-8'}
-		response.body = fileBuffer.toString('binary')
+// 		response.headers = {'Content-Type' : 'text/plain; charset=utf-8'}
+// 		response.body = venuesData
 
-		callback(null, response)
-	} catch(err) {
-		response = {
-			statusCode: 400,
-			headers: {'Content-Type' : 'text/plain'},
-			body: String(err)
-		};
-		callback(null, response)
-	}
-};
-
-module.exports.getVenuesJSONNext = async (event, context, callback) => {
-	let response = {
-		statusCode: 200,
-		headers: null,
-		body: null
-	}
-	try {
-		const userInput = common.processInputParams(JSON.parse(event.body))
-
-		const venuesData = await common.getFoursquareData(userInput);
-
-		
-		response.headers = {'Content-Type' : 'text/plain; charset=utf-8'}
-		response.body = venuesData
-
-		callback(null, response)
-	} catch(err) {
-		response = {
-			statusCode: 400,
-			headers: {'Content-Type' : 'text/plain'},
-			body: String(err)
-		};
-		callback(null, response)
-	}
-};
+// 		callback(null, response)
+// 	} catch(err) {
+// 		response = {
+// 			statusCode: 400,
+// 			headers: {'Content-Type' : 'text/plain'},
+// 			body: String(err)
+// 		};
+// 		callback(null, response)
+// 	}
+// };

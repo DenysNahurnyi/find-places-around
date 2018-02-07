@@ -1,3 +1,5 @@
+const json2csv = require('json2csv')
+
 const validation = require('./validations')
 
 exports.getFoursquareData = function (params = {}) {
@@ -50,5 +52,39 @@ exports.processInputParams = function(params) {
 			longitude: "Float number from -89.999999 to 89.999999"
 		}
 		throw new Error('Incorrect input parameter: '+ err.message +'\nExpected:\n' + JSON.stringify(expectedInput))
+	}
+}
+
+exports.getMainResponse = function (acceptHeader, venuesData) {
+	switch(acceptHeader) {
+		case 'text/csv': {
+			return getCSVResponse(venuesData)
+		}
+		case 'application/json': {
+			return getJSONResponse(venuesData)
+		}
+		default: {
+			throw new Error("Please enter preferable content type for response in Accept header")			
+		}
+	}
+}
+
+const getCSVResponse = function(venuesData) {
+	const columnNames = ["Name", "City", "Street address", "Latitude", "Longitude"]
+
+	const fileBuffer = json2csv({data: venuesData, fields: columnNames })
+
+	return {
+		statusCode: 200,
+		headers: {'Content-Type' : 'text/csv; charset=utf-8'},
+		body: fileBuffer.toString('binary')
+	}
+}
+
+const getJSONResponse = function(venuesData) {
+	return {
+		statusCode: 200,
+		headers: {'Content-Type' : 'application/json; charset=utf-8'},
+		body: JSON.stringify(venuesData)
 	}
 }

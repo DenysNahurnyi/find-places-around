@@ -51,30 +51,30 @@ package:
 #    - exclude-me-dir/**
 
 functions:
-  getVenuesJSON:
-    handler: handler.getVenuesJSON
-    events:
-     - http:
-         path: venues.json
-         method: post
-  getVenuesCSV:
-    handler: handler.getVenuesCSV
-    events:
-     - http:
-         path: venues.csv
-         method: post
+  # getVenuesJSON:
+  #   handler: handler.getVenuesJSON
+  #   events:
+  #    - http:
+  #        path: venues.json
+  #        method: post
+  # getVenuesCSV:
+  #   handler: handler.getVenuesCSV
+  #   events:
+  #    - http:
+  #        path: venues.csv
+  #        method: post
   getVenuesCSVNext:
     handler: handler.getVenuesCSVNext
     events:
      - http:
-         path: v2/venues/csv
+         path: v2/venues
          method: post
-  getVenuesJSONNext:
-    handler: handler.getVenuesJSONNext
-    events:
-     - http:
-         path: v2/venues/json
-         method: post
+  # getVenuesJSONNext:
+  #   handler: handler.getVenuesJSONNext
+  #   events:
+  #    - http:
+  #        path: v2/venues/json
+  #        method: post
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
