@@ -1,3 +1,5 @@
+const validation = require('./validations')
+
 exports.getFoursquareData = function (params = {}) {
 	const request = require('request')
 	const config = require('config')
@@ -12,7 +14,7 @@ exports.getFoursquareData = function (params = {}) {
 				ll: params.latitude + ',' + params.longitude,
 				radius: params.radius,
 				query: params.venueType,
-				v: getCurrentDateInSpecialFormat()
+				v: validation.getCurrentDateInSpecialFormat()
 		}
 		}, (err, r, body) => {
 			err ? rej(err) : res(getBodyParameters(body))
@@ -31,46 +33,13 @@ function getBodyParameters(str) {
 	}))
 }
 
-function getCurrentDateInSpecialFormat() {
-	var date = new Date();
-	const monthNDay = [date.getMonth() + 1, date.getDate()].map(date => 
-		date.toString().replace(/^([0-9])$/, '0$1')
-	)
-	return date.getFullYear() + monthNDay[1] + monthNDay[0]
-}
-
-const processCoordinate = (coordinate, type) => {
-	if(Number(coordinate)) {
-		coordinate = Number(coordinate).toFixed(6)
-	}
-	console.log("coordinate:", coordinate)
-	if (new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}$/).exec(coordinate))
-		return coordinate
-	else
-		throw new Error(type)
-}
-	
-const processName = (name, type) => {
-	if(name && new RegExp(/^[a-z]{1,20}$/).exec(name))
-		return name
-	else
-		throw new Error(type)
-}
-
-const processRadius = r => {
-	if(new RegExp(/^\d{1,2}$|^1{1}0{2}$|^0{1}$/).exec(r))
-		return r < 1 ? 1000 : r * 1000
-	else 
-		throw new Error('radius')
-}
-
 exports.processInputParams = function(params) {
 	try {
 		return {
-			venueType: processName(params.venueType, 'Venue type'),
-			radius: processRadius(params.radius),
-			latitude: processCoordinate(params.latitude, 'latitude'),
-			longitude: processCoordinate(params.longitude, 'longitude')
+			venueType: validation.processName(params.venueType, 'Venue type'),
+			radius: validation.processRadius(params.radius),
+			latitude: validation.processCoordinate(params.latitude, 'latitude'),
+			longitude: validation.processCoordinate(params.longitude, 'longitude')
 		}
 	} catch (err) {
 		console.log(err)

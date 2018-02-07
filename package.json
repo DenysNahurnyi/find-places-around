@@ -4,18 +4,35 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d ."
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/DenysNahurnyi/find-places-around.git"
   },
   "author": "Denys Nahurnyi",
-  "keywords": ["AWS", "Lambda", "Node.js", "Foursquare API", "Serverless", "Location"],
+  "keywords": [
+    "AWS",
+    "Lambda",
+    "Node.js",
+    "Foursquare API",
+    "Serverless",
+    "Location"
+  ],
   "license": "ISC",
   "dependencies": {
     "config": "^1.29.2",
     "json2csv": "^3.11.5",
     "request": "^2.83.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.17.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "jest": "^22.2.0",
+    "prettier": "1.10.2"
   }
 }

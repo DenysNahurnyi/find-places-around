@@ -45,8 +45,9 @@ provider:
 package:
  include:
    - config/default.json
-#  exclude:
-#    - exclude-me.js
+ exclude:
+   - src
+   - src/**
 #    - exclude-me-dir/**
 
 functions:
@@ -61,6 +62,18 @@ functions:
     events:
      - http:
          path: venues.csv
+         method: post
+  getVenuesCSVNext:
+    handler: handler.getVenuesCSVNext
+    events:
+     - http:
+         path: v2/venues/csv
+         method: post
+  getVenuesJSONNext:
+    handler: handler.getVenuesJSONNext
+    events:
+     - http:
+         path: v2/venues/json
          method: post
 
 #    The following are a few example events you can configure
