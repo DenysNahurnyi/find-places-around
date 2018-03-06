@@ -15,3 +15,5 @@ Try how it works:
         latitude: Float number from -89.9... to 89.9...,
         longitude: Float number from -89.9... to 89.9...,
     }
+    
+It is not working now because I've changed all credentials in my AWS account. Feel free to download and use your own lambda.
